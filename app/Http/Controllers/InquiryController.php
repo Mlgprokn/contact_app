@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Mail;
 class InquiryController extends Controller
 {
     /**
+     * Get all inquiries
+     *
+     * @return jsonresponse
+     */
+    public function index()
+    {
+        return Inquiry::all();
+    }
+
+    /**
      * Store a new inquiry
      *
      * @return jsonresponse
@@ -31,4 +41,19 @@ class InquiryController extends Controller
         //return a json response with the inquiry
         return response()->json(["inquiry" => $inquiry, "success" => "Message succesfully send."], 201);
     }
+
+    /**
+     * Delete an inquiry
+     *
+     * @return jsonresponse
+     */
+    public function destroy($id)
+    {
+        $inquiry = Inquiry::find($id);
+        $inquiry->delete();
+
+        //return a json response with the inquiry
+        return response()->json(["inquiry" => $inquiry, "success" => "Deleted succesfully."], 201);
+    }
+
 }

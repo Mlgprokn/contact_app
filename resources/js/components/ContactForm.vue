@@ -82,9 +82,6 @@
                                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                                 />
                             </div>
-                            <p class="mt-2 text-sm text-gray-500">
-                                Message to your contact
-                            </p>
                             <p
                                 v-if="errors.message"
                                 class="mt-2 text-sm text-red-500"
@@ -103,13 +100,46 @@
                     <button
                         type="button"
                         class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        @click="sendMessage(message)"
+                        @click="sendMessage()"
                     >
                         Send message
                     </button>
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                All Inquiries
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                Information about name and message
+            </p>
+        </div>
+        <div class="border-t border-gray-200">
+            <div
+                class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                v-for="inquiry in inquiries"
+                v-bind:key="inquiry._id"
+            >
+                <div class="text-sm font-medium text-gray-500">
+                    <button
+                        class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                        @click="deleteInquiry(inquiry._id)"
+                    >
+                        X
+                    </button>
+                    {{ inquiry.name }}
+                </div>
+                <div class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <p class="truncate">
+                        {{ inquiry.message }}
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -126,6 +156,7 @@ export default {
                 phone: "",
                 message: "",
             },
+            inquiries: [],
             errors: [],
             success: "",
         };
@@ -138,16 +169,41 @@ export default {
 
             //make an ajax call to send the message
             axios
-                .post("http://localhost:8000/api/inquiry", this.contact)
+                .post("http://localhost:8000/api/inquiries", this.contact)
                 .then((response) => {
                     this.success = response.data.success;
-                    console.log(response);
+                    this.inquiries.push(response.data.inquiry);
                 })
                 .catch((error) => {
                     this.errors = error.response.data.errors;
                     console.log(error);
                 });
         },
+
+        deleteInquiry(id) {
+            //make a delete request
+            axios
+                .delete(`http://localhost:8000/api/inquiries/${id}`)
+                .then((response) => {
+                    this.inquiries = this.inquiries.filter(
+                        (inquiry) => inquiry._id !== response.data.inquiry._id
+                    );
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+    },
+    mounted() {
+        //get all inqueries
+        axios
+            .get("http://localhost:8000/api/inquiries")
+            .then((response) => {
+                this.inquiries = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     },
 };
 </script>

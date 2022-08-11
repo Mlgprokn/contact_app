@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('inquiry', InquiryController::class)->only([
-    'store'
+Route::resource('inquiries', InquiryController::class)->only([
+    'index', 'store', 'destroy'
  ]);
