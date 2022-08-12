@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import Home from "./components/Home.vue";
+import ContactPage from "./components/ContactPage.vue";
 import "../css/app.css";
 
-createApp(Home).mount("#app");
+createApp(ContactPage).mount("#app");
