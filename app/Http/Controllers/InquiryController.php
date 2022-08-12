@@ -20,6 +20,16 @@ class InquiryController extends Controller
     }
 
     /**
+     * Get all inquiries
+     *
+     * @return jsonresponse
+     */
+    public function show()
+    {
+        return Inquiry::where('name', '=', 'test');
+    }
+
+    /**
      * Store a new inquiry
      *
      * @return jsonresponse

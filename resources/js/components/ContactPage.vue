@@ -32,7 +32,7 @@ export default {
         sendMessage(contact) {
             //clear the labels
             this.errors = [];
-            this.success = "";
+            this.success = "0";
 
             //make an ajax call to send the message
             axios
